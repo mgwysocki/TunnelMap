@@ -3,7 +3,7 @@
 #include <QSettings>
 
 #include "ProcessList.h"
-#include "MainWindow.h"
+#include "ConfigWindow.h"
 
 #include <iostream>
 using namespace std;
@@ -20,6 +20,6 @@ int main(int argc, char *argv[])
   ProcessList proc_list;
   proc_list.load();
 
-  MainWindow main_window(&proc_list);
+  ConfigWindow config_window(&proc_list);
   return app.exec();
 }
