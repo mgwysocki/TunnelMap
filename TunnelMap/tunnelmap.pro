@@ -20,11 +20,17 @@ macx {
 MOC_DIR = $$OBJECTS_DIR
 
 # Input
-HEADERS += TunnelWidget.h \
-           MainWindow.h
+HEADERS += TunnelProcess.h \
+           ProcessList.h \
+           SysTrayMenu.h \
+           EditDialog.h \
+           ConfigWindow.h
            
-SOURCES += TunnelWidget.cxx \
-           MainWindow.cxx \
+SOURCES += TunnelProcess.cxx \
+           ProcessList.cxx \
+           SysTrayMenu.cxx \
+           EditDialog.cxx \
+           ConfigWindow.cxx \
            main.cxx
 
 RESOURCES += icons.qrc
