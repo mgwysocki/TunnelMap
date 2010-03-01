@@ -9,11 +9,15 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+#include <QModelIndex>
 class QVBoxLayout;
 class QLineEdit;
+class QPlainTextEdit;
+class QCheckBox;
 class ProcessList;
 class SysTrayMenu;
 class QListView;
+class TunnelProcess;
 
 class ConfigWindow : public QMainWindow
 {
@@ -25,6 +29,8 @@ class ConfigWindow : public QMainWindow
 
  private slots:
   void add_new_tunnel_();
+  void load_info(QModelIndex);
+  void save_info();
   void sys_tray_activate_(QSystemTrayIcon::ActivationReason reason);
   void notify_connected(QString, QString);
   void show();
@@ -35,7 +41,13 @@ class ConfigWindow : public QMainWindow
   QLineEdit* ssh_args_edit_;
   QListView* proc_view_;
 
+  QLineEdit* name_edit_;
+  QPlainTextEdit* args_edit_;
+  QCheckBox* auto_connect_box_;
+  QCheckBox* dependent_box_;
+
   ProcessList* proc_list_;
+  TunnelProcess* tp_;
 
   void closeEvent(QCloseEvent *);
 

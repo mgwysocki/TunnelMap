@@ -119,3 +119,21 @@ void ProcessList::disconnect_all()
   }  
   return;
 }
+
+void ProcessList::set_ssh_cmd(QString s)
+{
+  ssh_cmd_ = s;
+  for( int i=0; i<tunnel_list_.size(); ++i ){
+    tunnel_list_.at(i)->set_ssh_cmd( ssh_cmd_ );
+  }
+  return;
+}
+
+void ProcessList::set_ssh_args(QString s)
+{
+  ssh_args_ = s;
+  for( int i=0; i<tunnel_list_.size(); ++i ){
+    tunnel_list_.at(i)->set_ssh_args( ssh_args_ );
+  }
+  return;
+}

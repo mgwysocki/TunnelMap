@@ -10,6 +10,7 @@
 #include <QProcess>
 #include <QIcon>
 #include <QAction>
+#include <QTime>
 
 class TunnelProcess : public QProcess
 {
@@ -65,6 +66,7 @@ class TunnelProcess : public QProcess
   bool close_initiated_;
   bool dependent_;
 
+  QTime timer_;
   QAction* action_;
   static QIcon red_icon_;
   static QIcon green_icon_;

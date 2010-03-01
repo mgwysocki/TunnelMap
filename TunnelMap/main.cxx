@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
   app.setQuitOnLastWindowClosed(false);
 
+  // Saves prefs to
+  // Mac OSX: ~/.config/WysockiSpace/Tunnel\ Watcher.ini
+  //
   QCoreApplication::setOrganizationName("WysockiSpace");
   QCoreApplication::setApplicationName("Tunnel Watcher");
   QSettings::setDefaultFormat(QSettings::IniFormat);

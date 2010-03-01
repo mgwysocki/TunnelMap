@@ -24,10 +24,13 @@ class ProcessList : public QAbstractListModel
   int rowCount( const QModelIndex & ) const {return tunnel_list_.size();}
 
   int size() {return tunnel_list_.size();}
-  const TunnelProcess* at(int i) {return tunnel_list_.at(i);}
+  TunnelProcess* at(int i) {return tunnel_list_.at(i);}
 
   QString get_ssh_cmd() const {return ssh_cmd_;}
   QString get_ssh_args() const {return ssh_args_;}
+
+  void set_ssh_cmd(QString s);
+  void set_ssh_args(QString s);
 
   void append(TunnelProcess*);
   TunnelProcess* insert( int row );

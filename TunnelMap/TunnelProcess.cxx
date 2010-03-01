@@ -1,5 +1,6 @@
 
 #include "TunnelProcess.h"
+#include <QTimer>
 
 #include <iostream>
 using namespace std;
@@ -80,6 +81,7 @@ void TunnelProcess::close()
 void TunnelProcess::when_connected()
 {
   action_->setIcon(green_icon_);
+  timer_.restart();
   return;
 }
 
@@ -94,7 +96,10 @@ void TunnelProcess::when_disconnected(int i, QProcess::ExitStatus status)
   }
 
   if( !close_initiated_ && auto_connect_)
-    open();
+    if(timer_.elapsed() > 30*1000)
+      open();
+    else
+      QTimer::singleShot( (30*1000-timer_.elapsed()), this, SLOT(open()));
   close_initiated_ = false;
   return;
 }
