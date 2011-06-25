@@ -72,6 +72,8 @@ void TunnelProcess::open()
 
 void TunnelProcess::close()
 {
+  if( state() == QProcess::NotRunning )
+    return;
   close_initiated_ = true;
   terminate();
   waitForFinished();
@@ -108,5 +110,11 @@ void TunnelProcess::toggle_state()
 {
   if( state() == QProcess::NotRunning )  open();
   else                                   close();
+  return;
+}
+
+void TunnelProcess::network_up()
+{
+  if(auto_connect_ && state() == QProcess::NotRunning) open();
   return;
 }

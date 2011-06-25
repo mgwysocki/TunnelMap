@@ -34,6 +34,7 @@ SysTrayMenu::SysTrayMenu(ProcessList* pl, QWidget* parent) :
 	  proc_list_, SLOT(disconnect_all()));
   connect(quit_action_, SIGNAL(triggered()),
 	  qApp, SLOT(quit()));
+  return;
 }
 
 

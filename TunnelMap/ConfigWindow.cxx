@@ -1,4 +1,5 @@
 #include <QtGui>
+#include <QNetworkInterface>
 #include "ConfigWindow.h"
 #include "ProcessList.h"
 #include "SysTrayMenu.h"
@@ -52,6 +53,20 @@ ConfigWindow::ConfigWindow(ProcessList* pl) :
   auto_connect_box_ = new QCheckBox("Auto-connect");
   dependent_box_ = new QCheckBox("Dependent tunnel");
 
+  QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();
+  for(int i=0; i<nets.size(); i++) {
+    QString nicname = nets[i].humanReadableName();
+    int index = proc_list_->get_valid_nics().indexOf(nicname);
+
+    unsigned int nicflags = nets[i].flags();
+    if( nicflags & QNetworkInterface::IsUp )
+      nicname += tr(" [active]");
+
+    nic_checkboxes_.push_back(new QCheckBox(nicname));
+
+    if( index>-1 )
+      nic_checkboxes_[i]->setCheckState(Qt::Checked);
+  }
 
   QPushButton* new_tunnel_btn = new QPushButton("New Tunnel");
   connect( new_tunnel_btn, SIGNAL(clicked()),
@@ -66,7 +81,6 @@ ConfigWindow::ConfigWindow(ProcessList* pl) :
   layout->addWidget(ssh_args_label, 1, 0, 1, 1);
   layout->addWidget(ssh_args_edit_, 1, 1, 1, 1);
   layout->addWidget(proc_view_, 2, 0, 5, 2);
-  layout->addWidget(new_tunnel_btn, 7, 0, 1, 1);
 
   layout->addWidget(name_label, 0, 2, 1, 1);
   layout->addWidget(name_edit_, 0, 3, 1, 1);
@@ -74,7 +88,13 @@ ConfigWindow::ConfigWindow(ProcessList* pl) :
   layout->addWidget(args_edit_, 2, 2, 3, 2);
   layout->addWidget(auto_connect_box_, 5, 2, 1, 2);
   layout->addWidget(dependent_box_, 6, 2, 1, 2);
-  layout->addWidget(apply_btn, 7, 3, 1, 1);
+
+  for(int i=0; i<nic_checkboxes_.size(); i++) {
+    layout->addWidget(nic_checkboxes_[i], 7+i, 0, 1, 2);
+  }
+
+  layout->addWidget(new_tunnel_btn, 8+nic_checkboxes_.size(), 0, 1, 1);
+  layout->addWidget(apply_btn, 8+nic_checkboxes_.size(), 3, 1, 1);
 
   layout->setColumnStretch(0,0);
   layout->setColumnStretch(1,0);
@@ -188,6 +208,16 @@ void ConfigWindow::save_info()
     tp_->set_auto_connect( (auto_connect_box_->checkState() == Qt::Checked) );
     tp_->set_dependent( (dependent_box_->checkState() == Qt::Checked) );
   }
+
+  QList<QString> nics;
+  for(int i=0; i<nic_checkboxes_.size(); i++) {
+    if(nic_checkboxes_[i]->checkState() == Qt::Checked) {
+      QString name = nic_checkboxes_[i]->text();
+      QStringList strs = name.split(" ");
+      nics.push_back(strs[0]);
+    }
+  }
+  proc_list_->set_valid_nics(nics);
   proc_list_->save();
   return;
 }

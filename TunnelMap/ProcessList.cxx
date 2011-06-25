@@ -1,11 +1,17 @@
 #include "ProcessList.h"
 #include <QSettings.h>
+#include <QNetworkInterface>
+
 #include <iostream>
 using namespace std;
 
 ProcessList::ProcessList() :
   QAbstractListModel::QAbstractListModel()
-{}
+{
+  connect(&net_check_timer_, SIGNAL(timeout()),
+          this, SLOT(check_network_interfaces()));
+  net_check_timer_.start(60*1000);
+}
 
 ProcessList::~ProcessList()
 {
@@ -76,10 +82,19 @@ void ProcessList::load()
     tproc->set_auto_connect( settings.value("enabled").toBool() );
     tproc->set_dependent( settings.value("dependent").toBool() );
     connect(tproc, SIGNAL(connected(QString, QString)),
-	    this, SLOT(notify_connected(QString, QString)));
+            this,    SLOT(notify_connected(QString, QString)));
+    connect(this, SIGNAL(network_up()),
+            tproc,  SLOT(network_up()));
   }
-
   settings.endArray();
+
+  size = settings.beginReadArray("validnics");
+  for(int i=0; i<size; i++) {
+    settings.setArrayIndex(i);
+    valid_nics_.push_back(settings.value("name").toString());
+  }
+  settings.endArray();
+
   emit modified();
   return;
 }
@@ -100,6 +115,14 @@ void ProcessList::save()
     settings.setValue("dependent", tunnel_list_.at(i)->is_dependent());
   }
   settings.endArray();
+
+  settings.beginWriteArray("validnics");
+  for(int i=0; i<valid_nics_.size(); i++) {
+    settings.setArrayIndex(i);
+    settings.setValue("name", valid_nics_.at(i));
+  }
+  settings.endArray();
+
   std::cout << "done" << std::endl;
   return;
 }
@@ -135,5 +158,21 @@ void ProcessList::set_ssh_args(QString s)
   for( int i=0; i<tunnel_list_.size(); ++i ){
     tunnel_list_.at(i)->set_ssh_args( ssh_args_ );
   }
+  return;
+}
+
+void ProcessList::check_network_interfaces()
+{
+  bool net_up = false;
+  QList<QNetworkInterface> nets = QNetworkInterface::allInterfaces();
+  for(int i=0; i<nets.size(); i++) {
+    cout << nets[i].humanReadableName().toStdString() << " status=" << nets[i].flags() << endl;
+    if( nets[i].flags() & QNetworkInterface::IsUp )
+      if( valid_nics_.indexOf(nets[i].humanReadableName()) > -1 )
+        net_up = true;
+  }
+
+  if(net_up)
+    emit network_up();
   return;
 }

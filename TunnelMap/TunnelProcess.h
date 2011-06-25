@@ -49,6 +49,7 @@ class TunnelProcess : public QProcess
  public slots:
   void open();
   void close();
+  void network_up();
 
  protected slots:
   void when_connected();

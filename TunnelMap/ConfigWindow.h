@@ -45,6 +45,7 @@ class ConfigWindow : public QMainWindow
   QPlainTextEdit* args_edit_;
   QCheckBox* auto_connect_box_;
   QCheckBox* dependent_box_;
+  QList<QCheckBox*> nic_checkboxes_;
 
   ProcessList* proc_list_;
   TunnelProcess* tp_;

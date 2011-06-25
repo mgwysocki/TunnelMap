@@ -1,11 +1,13 @@
 ######################################################################
-# qmake configuration file for datathief project
+# qmake configuration file for tunnelmap project
 
 
 TEMPLATE = app
 TARGET = TunnelMap
 # DEPENDPATH += .
 # INCLUDEPATH += .
+
+QT += network
 
 win32 {
   OBJECTS_DIR = build_windows

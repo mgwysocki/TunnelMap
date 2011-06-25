@@ -10,6 +10,7 @@
 
 #include <QAbstractListModel>
 #include <QList>
+#include <QTimer>
 #include "TunnelProcess.h"
 
 class ProcessList : public QAbstractListModel
@@ -28,9 +29,11 @@ class ProcessList : public QAbstractListModel
 
   QString get_ssh_cmd() const {return ssh_cmd_;}
   QString get_ssh_args() const {return ssh_args_;}
+  QList<QString> get_valid_nics() const {return valid_nics_;}
 
   void set_ssh_cmd(QString s);
   void set_ssh_args(QString s);
+  void set_valid_nics(QList<QString> vn) {valid_nics_ = vn;}
 
   void append(TunnelProcess*);
   TunnelProcess* insert( int row );
@@ -39,12 +42,14 @@ class ProcessList : public QAbstractListModel
  signals:
   void connected(QString, QString);
   void modified();
+  void network_up();
 
  public slots:
   void connect_all();
   void disconnect_all();
   void load();
   void save();
+  void check_network_interfaces();
 
  protected slots:
   void notify_connected(QString a, QString b)
@@ -52,8 +57,11 @@ class ProcessList : public QAbstractListModel
 
  protected:
   QList<TunnelProcess*> tunnel_list_;
+  QList<QString> valid_nics_;
   QString ssh_cmd_;
   QString ssh_args_;
+
+  QTimer net_check_timer_;
 };
 
 #endif // PROCESSLIST_H__
