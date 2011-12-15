@@ -35,6 +35,7 @@ void TunnelProcess::init()
   auto_connect_ = false;
   dependent_ = false;
   close_initiated_ = false;
+  is_connected_ = false;
   action_ = new QAction(red_icon_, name_, 0);
 
   // Active/Inactive slots
@@ -83,6 +84,7 @@ void TunnelProcess::close()
 void TunnelProcess::when_connected()
 {
   action_->setIcon(green_icon_);
+  is_connected_ = true;
   timer_.restart();
   return;
 }
@@ -90,6 +92,7 @@ void TunnelProcess::when_connected()
 void TunnelProcess::when_disconnected(int i, QProcess::ExitStatus status)
 {
   action_->setIcon(red_icon_);
+  is_connected_ = false;
 
   if( status == QProcess::NormalExit ){
     cout << "Process exited normally with code " << i << endl;

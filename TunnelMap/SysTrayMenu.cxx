@@ -17,6 +17,7 @@ SysTrayMenu::SysTrayMenu(ProcessList* pl, QWidget* parent) :
   this->addSeparator();
 
   connect_action_ = this->addAction("Connect All");
+  reconnect_action_ = this->addAction("Reconnect All");
   disconnect_action_ = this->addAction("Disconnect All");
   this->addSeparator();
 
@@ -30,6 +31,8 @@ SysTrayMenu::SysTrayMenu(ProcessList* pl, QWidget* parent) :
 
   connect(connect_action_, SIGNAL(triggered()),
 	  proc_list_, SLOT(connect_all()));
+  connect(reconnect_action_, SIGNAL(triggered()),
+	  proc_list_, SLOT(reconnect_all()));
   connect(disconnect_action_, SIGNAL(triggered()),
 	  proc_list_, SLOT(disconnect_all()));
   connect(quit_action_, SIGNAL(triggered()),

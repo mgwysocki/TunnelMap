@@ -46,6 +46,7 @@ class ProcessList : public QAbstractListModel
 
  public slots:
   void connect_all();
+  void reconnect_all();
   void disconnect_all();
   void load();
   void save();

@@ -10,7 +10,7 @@ ProcessList::ProcessList() :
 {
   connect(&net_check_timer_, SIGNAL(timeout()),
           this, SLOT(check_network_interfaces()));
-  net_check_timer_.start(60*1000);
+  //net_check_timer_.start(60*1000);
 }
 
 ProcessList::~ProcessList()
@@ -131,6 +131,17 @@ void ProcessList::connect_all()
 {
   for( int i=0; i<tunnel_list_.size(); ++i ){
     tunnel_list_[i]->open();
+  }  
+  return;
+}
+
+void ProcessList::reconnect_all()
+{
+  for( int i=0; i<tunnel_list_.size(); ++i ){
+    if(tunnel_list_[i]->is_connected()) {
+      tunnel_list_[i]->close();
+      tunnel_list_[i]->open();
+    }
   }  
   return;
 }

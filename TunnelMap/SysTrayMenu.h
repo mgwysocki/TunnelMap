@@ -28,6 +28,7 @@ Q_OBJECT
 
   QAction* config_action_;
   QAction* connect_action_;
+  QAction* reconnect_action_;
   QAction* disconnect_action_;
   QAction* quit_action_;
   QAction* sep_;

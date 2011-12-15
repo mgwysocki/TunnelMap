@@ -29,6 +29,7 @@ class TunnelProcess : public QProcess
   QString get_args() const {return args_;}
   bool is_auto_connect() const {return auto_connect_;}
   bool is_dependent() const {return dependent_;}
+  bool is_connected() const {return is_connected_;}
 
   void set_name(QString s) {name_ = s;}
   void set_ssh_cmd(QString s) {ssh_cmd_ = s;}
@@ -66,6 +67,7 @@ class TunnelProcess : public QProcess
   bool auto_connect_;
   bool close_initiated_;
   bool dependent_;
+  bool is_connected_;
 
   QTime timer_;
   QAction* action_;
